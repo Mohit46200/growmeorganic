@@ -57,11 +57,8 @@ function App() {
     setselectedids(prev => {
       const newset = new Set(prev)
 
-      if (newset.has(id)) {
-        newset.delete(id)
-      } else {
-        newset.add(id)
-      }
+      if (newset.has(id)) newset.delete(id)
+      else newset.add(id)
 
       return newset
     })
@@ -74,11 +71,8 @@ function App() {
       const newset = new Set(prev)
 
       artworks.forEach(a => {
-        if (allselected) {
-          newset.delete(a.id)
-        } else {
-          newset.add(a.id)
-        }
+        if (allselected) newset.delete(a.id)
+        else newset.add(a.id)
       })
 
       return newset
@@ -102,24 +96,93 @@ function App() {
     setselectcount("")
   }
 
+  // 🔹 FULL WHITE LOADING SCREEN
+if (loading) {
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>artworks table</h2>
-
-      <div style={{ marginBottom: "15px", fontWeight: "bold" }}>
-        total selected ids: {selectedids.size}
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "#4a4e69",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+      <div
+        style={{
+          background: "#22223b",
+          padding: "50px 80px",
+          borderRadius: "16px",
+          color: "#f2f2f2",
+          fontSize: "32px",
+          fontWeight: 700,
+          textAlign: "center",
+          boxShadow: "0 15px 40px rgba(0,0,0,0.4)"
+        }}
+      >
+        Fetching data...
       </div>
+    </div>
+  )
+}
 
-      <button onClick={() => setshowoverlay(true)}>
-        custom select rows
-      </button>
 
-      {loading ? (
-        <p>loading...</p>
-      ) : (
-        <table border={1} cellPadding={8} width="100%">
+
+  return (
+    <div
+      style={{
+        padding: "40px",
+        fontFamily: "Inter, sans-serif",
+        backgroundColor: "#4a4e69",   // ✅ greyish background
+        minHeight: "100vh"
+      }}
+    >
+      <div
+        style={{
+          background: "#22223b",
+          padding: "30px",
+          borderRadius: "12px",
+          boxShadow: "0 6px 25px rgba(0,0,0,0.06)"
+        }}
+      >
+        <h2 style={{ marginBottom: "15px" }}>Grow Me Organic Assignment</h2>
+
+        <div
+          style={{
+            marginBottom: "20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+          <div style={{ fontWeight: 600 }}>
+            Selected: {selectedids.size}
+          </div>
+
+          <button
+            onClick={() => setshowoverlay(true)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "6px",
+              border: "none",
+              backgroundColor: "#9a8c98",
+              color: "#284b63",
+              cursor: "pointer",
+              fontWeight:"bolder"
+            }}
+          >
+            Custom Select
+          </button>
+        </div>
+
+        <table
+          width="100%"
+          cellPadding={12}
+          style={{ borderCollapse: "separate", borderSpacing: "0 8px" }}
+        >
           <thead>
-            <tr>
+            <tr style={{ textAlign: "left", fontSize: "20px", color: "#d9d9d9" }}>
               <th>
                 <input
                   type="checkbox"
@@ -130,17 +193,25 @@ function App() {
                   onChange={selectallcurrentpage}
                 />
               </th>
-              <th>title</th>
-              <th>place</th>
-              <th>artist</th>
-              <th>inscriptions</th>
-              <th>start</th>
-              <th>end</th>
+              <th>Title</th>
+              <th>Place</th>
+              <th>Artist</th>
+              <th>Inscriptions</th>
+              <th>Start</th>
+              <th>End</th>
             </tr>
           </thead>
+
           <tbody>
             {artworks.map(a => (
-              <tr key={a.id}>
+              <tr
+                key={a.id}
+                style={{
+                  background: "#2f2f4f",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                  borderRadius: "8px"
+                }}
+              >
                 <td>
                   <input
                     type="checkbox"
@@ -149,64 +220,116 @@ function App() {
                   />
                 </td>
                 <td>{a.title}</td>
-                <td>{a.place_of_origin ?? "n/a"}</td>
-                <td>{a.artist_display ?? "n/a"}</td>
-                <td>{a.inscriptions ?? "n/a"}</td>
-                <td>{a.date_start ?? "n/a"}</td>
-                <td>{a.date_end ?? "n/a"}</td>
+                <td>{a.place_of_origin ?? "-"}</td>
+                <td>{a.artist_display ?? "-"}</td>
+                <td>{a.inscriptions ?? "-"}</td>
+                <td>{a.date_start ?? "-"}</td>
+                <td>{a.date_end ?? "-"}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      )}
 
-      <div style={{ marginTop: "20px" }}>
-        <button
-          disabled={currentpage === 1}
-          onClick={() => changepage(currentpage - 1)}
+        <div
+          style={{
+            marginTop: "25px",
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px"
+          }}
         >
-          prev
-        </button>
+          <button
+            disabled={currentpage === 1}
+            onClick={() => changepage(currentpage - 1)}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "6px",
+              background: "#9a8c98",
+              cursor: "pointer",
+              color:"#284b63",
+              fontWeight:"bolder"
 
-        <span style={{ margin: "0 10px" }}>
-          page {currentpage} of {totalpages}
-        </span>
+            }}
+          >
+            Prev
+          </button>
 
-        <button
-          disabled={currentpage === totalpages}
-          onClick={() => changepage(currentpage + 1)}
-        >
-          next
-        </button>
+          <span>
+            Page {currentpage} of {totalpages}
+          </span>
+
+          <button
+            disabled={currentpage === totalpages}
+            onClick={() => changepage(currentpage + 1)}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "6px",
+              background: "#9a8c98",
+              cursor: "pointer",
+              color:"#284b63",
+              fontWeight:"bolder"
+            }}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {showoverlay && (
         <div
           style={{
             position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.5)",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.4)",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
-          <div style={{ background: "white", padding: "20px" }}>
-            <h3>select number of rows</h3>
+          <div
+            style={{
+              background: "black",
+              padding: "30px",
+              borderRadius: "12px",
+              width: "300px"
+            }}
+          >
+            <h3 style={{ marginBottom: "15px" }}>Select rows</h3>
 
             <input
               type="number"
               value={selectcount}
               onChange={e => setselectcount(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "6px",
+                border: "1px solid #ddd"
+              }}
             />
 
-            <div style={{ marginTop: "10px" }}>
-              <button onClick={customselect}>select</button>
+            <div
+              style={{
+                marginTop: "15px",
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px"
+              }}
+            >
               <button onClick={() => setshowoverlay(false)}>
-                cancel
+                Cancel
+              </button>
+              <button
+                onClick={customselect}
+                style={{
+                  borderRadius: "6px",
+                  background: "#9a8c98",
+                  cursor: "pointer",
+                  color:"#284b63",
+                  fontWeight:"bolder"
+                }}
+              >
+                Select
               </button>
             </div>
           </div>
