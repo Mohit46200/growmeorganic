@@ -134,7 +134,7 @@ if (loading) {
       style={{
         padding: "40px",
         fontFamily: "Inter, sans-serif",
-        backgroundColor: "#4a4e69",   // ✅ greyish background
+        backgroundColor: "#4a4e69",   
         minHeight: "100vh"
       }}
     >
